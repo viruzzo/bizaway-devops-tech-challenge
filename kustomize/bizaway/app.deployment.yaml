@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-tech-challenge
+  labels:
+    app: devops-tech-challenge
+spec:
+  selector:
+    matchLabels:
+      app: devops-tech-challenge
+  template:
+    metadata:
+      labels:
+        app: devops-tech-challenge
+    spec:
+      containers:
+        - name: app
+          image: bizaway/devops-tech-challenge:latest
+          ports:
+            - name: http
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          env:
+            - name: PORT
+              value: "3000"
+          envFrom:
+            - secretRef:
+                name: app-config
+                optional: false
+          securityContext:
+            runAsUser: 1001
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          readinessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            failureThreshold: 10
+            httpGet:
+              port: http
+              path: /health
+          livenessProbe:
+            periodSeconds: 10
+            httpGet:
+              port: http
+              path: /health

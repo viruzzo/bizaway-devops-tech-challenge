@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { VisitsModule } from './visits/visits.module';
+import { HealthModule } from './health/health.module';
+import { PrometheusService } from './metrics/prometheus.service';
+import { PrometheusController } from './metrics/prometheus.controller';
 
 @Module({
   imports: [
@@ -18,7 +21,9 @@ import { VisitsModule } from './visits/visits.module';
       inject: [ConfigService],
     }),
     VisitsModule,
+    HealthModule
   ],
-  controllers: [AppController],
+  providers: [PrometheusService],
+  controllers: [AppController, PrometheusController],
 })
-export class AppModule {}
+export class AppModule { }

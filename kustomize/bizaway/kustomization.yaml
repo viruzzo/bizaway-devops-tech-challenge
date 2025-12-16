@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: bizaway
+resources:
+  - app.deployment.yaml
+  - app.service.yaml
+
+secretGenerator:
+  - name: app-config
+    literals:
+      - MONGODB_URI=mongodb://bizaway:bizaway@mongo.mongo:27017/tech_challenge

@@ -1,0 +1,24 @@
+services:
+  app:
+    build: .
+    restart: always
+    environment:
+      PORT: 3000
+      MONGODB_URI: "mongodb://bizaway:bizaway@mongo:27017/tech_challenge"
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - type: bind
+        source: ./init_scripts
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 1s
+      retries: 10
+      timeout: 10s

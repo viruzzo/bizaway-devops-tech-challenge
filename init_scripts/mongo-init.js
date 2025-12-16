@@ -1,4 +1,12 @@
-db = db.getSiblingDB('modify_me_accordignly');
+db = db.getSiblingDB('tech_challenge');
+db.createUser({
+  user: 'bizaway',
+  pwd: 'bizaway',
+  roles: [{
+    role: 'readWrite', db: 'tech_challenge'
+  }]
+});
+
 db.createCollection('visits');
 db.visits.insertMany([
   {
